@@ -1,15 +1,20 @@
+import 'package:e_commerce_app/model/product.dart';
 import 'package:e_commerce_app/widgets/product_details_popoup.dart';
 import 'package:fan_carousel_image_slider/fan_carousel_image_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
 class ProductScreen extends StatelessWidget {
-  List<String> images = [
-    "assets/images/image1.jpg",
-    "assets/images/image2.jpg",
-    "assets/images/image3.jpg",
-    "assets/images/image4.jpg",
-  ];
+  const ProductScreen({super.key, required this.product});
+
+  final Product product;
+
+  // List<String> images = [
+  //   "assets/images/image1.jpg",
+  //   "assets/images/image2.jpg",
+  //   "assets/images/image3.jpg",
+  //   "assets/images/image4.jpg",
+  // ];
 
   @override
   Widget build(BuildContext context) {
@@ -36,8 +41,8 @@ class ProductScreen extends StatelessWidget {
                   child: FanCarouselImageSlider.sliderType1(
                     sliderHeight: 430,
                     autoPlay: true,
-                    imagesLink: images,
-                    isAssets: true,
+                    imagesLink: List.generate(4, (int) => product.image),
+                    isAssets: false,
                   ),
                 ),
                 Row(
@@ -47,26 +52,35 @@ class ProductScreen extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         SizedBox(height: 30),
-                        Text(
-                          "Warm Zipper",
-                          style: TextStyle(
-                            color: Colors.black87,
-                            fontWeight: FontWeight.w900,
-                            fontSize: 25,
+                        SizedBox(
+                          width: 250,
+                          child: Text(
+                            product.title,
+                            maxLines: 2,
+
+                            style: TextStyle(
+                              color: Colors.black87,
+                              fontWeight: FontWeight.w900,
+                              fontSize: 25,
+                            ),
                           ),
                         ),
                         SizedBox(height: 5),
-                        Text(
-                          "Hooded Jacket",
-                          style: TextStyle(
-                            color: Colors.black54,
-                            fontWeight: FontWeight.w500,
+                        SizedBox(
+                          width: 280,
+                          child: Text(
+                            product.title,
+                            maxLines: 2,
+                            style: TextStyle(
+                              color: Colors.black54,
+                              fontWeight: FontWeight.w500,
+                            ),
                           ),
                         ),
                       ],
                     ),
                     Text(
-                      "\$300.00",
+                      "\$ ${product.price}",
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 25,
@@ -95,7 +109,7 @@ class ProductScreen extends StatelessWidget {
                 Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
-                    "Cool, windy weather is on it's way.Send him out\nthe door in a jacket he wants to wear\nZooper Hooded Jacket. ",
+                    "${product.description}",
                     style: TextStyle(
                       color: Colors.black54,
                       fontWeight: FontWeight.w400,
