@@ -1,4 +1,5 @@
 import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
+import 'package:e_commerce_app/api/product_api.dart';
 import 'package:e_commerce_app/screens/cart_screen.dart';
 import 'package:e_commerce_app/screens/favorites_screen.dart';
 import 'package:e_commerce_app/screens/home_screen.dart';
@@ -15,6 +16,12 @@ class NavigationScreen extends StatefulWidget {
 
 class _NavigationScreenState extends State<NavigationScreen> {
   int pageIndex = 0;
+
+  @override
+  void initState() {
+    ProductApi().getProduct();
+    super.initState();
+  }
 
   List<Widget> pages = [
     HomeScreen(),
