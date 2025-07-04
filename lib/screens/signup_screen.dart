@@ -75,16 +75,16 @@ class SignupScreen extends StatelessWidget {
                             ),
                           );
                         },
-                        child: Text(
-                          "Create Account",
-                          style: TextStyle(fontSize: 18),
-                        ),
                         style: ElevatedButton.styleFrom(
                           minimumSize: Size.fromHeight(55),
                           backgroundColor: Color(0xFFDB3022),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(8),
                           ),
+                        ),
+                        child: Text(
+                          "Create Account",
+                          style: TextStyle(fontSize: 18),
                         ),
                       ),
                       SizedBox(height: 10),

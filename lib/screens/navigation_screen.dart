@@ -15,7 +15,7 @@ class NavigationScreen extends StatefulWidget {
 
 class _NavigationScreenState extends State<NavigationScreen> {
   int pageIndex = 0;
-
+    
   List<Widget> pages = [
     HomeScreen(),
     CartScreen(),
