@@ -71,7 +71,6 @@ class LoginScreen extends StatelessWidget {
                             ),
                           );
                         },
-                        child: Text("Log In", style: TextStyle(fontSize: 18)),
                         style: ElevatedButton.styleFrom(
                           minimumSize: Size.fromHeight(55),
                           backgroundColor: Color(0xFFDB3022),
@@ -79,6 +78,11 @@ class LoginScreen extends StatelessWidget {
                             borderRadius: BorderRadius.circular(8),
                           ),
                         ),
+                        child: Text(
+                          "Log In", 
+                          style: TextStyle(
+                            fontSize: 18,
+                            )),
                       ),
                       SizedBox(height: 10),
 
