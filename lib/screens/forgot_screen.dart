@@ -84,7 +84,11 @@ class _ForgotScreenState extends State<ForgotScreen> {
                     borderRadius: BorderRadius.circular(8),
                   ),
                 ),
-                child: Text("Send Code", style: TextStyle(fontSize: 18)),
+                child: Text(
+                  "Send Code", 
+                  style: TextStyle(
+                    fontSize: 18
+                    )),
               ),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
