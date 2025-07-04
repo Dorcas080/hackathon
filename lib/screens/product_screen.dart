@@ -1,21 +1,20 @@
-import 'package:e_commerce_app/model/product.dart';
-import 'package:e_commerce_app/widgets/product_details_popoup.dart';
 import 'package:fan_carousel_image_slider/fan_carousel_image_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:e_commerce_app/model/product.dart';
+import 'package:e_commerce_app/widgets/container_button_model.dart';
 
-class ProductScreen extends StatelessWidget {
+class ProductScreen extends StatefulWidget {
   const ProductScreen({super.key, required this.product});
 
   final Product product;
 
-  // List<String> images = [
-  //   "assets/images/image1.jpg",
-  //   "assets/images/image2.jpg",
-  //   "assets/images/image3.jpg",
-  //   "assets/images/image4.jpg",
-  // ];
+  @override
+  State<ProductScreen> createState() => _ProductScreenState();
+}
 
+class _ProductScreenState extends State<ProductScreen> {
+  // List<String> images = [
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -41,7 +40,7 @@ class ProductScreen extends StatelessWidget {
                   child: FanCarouselImageSlider.sliderType1(
                     sliderHeight: 430,
                     autoPlay: true,
-                    imagesLink: List.generate(4, (int) => product.image),
+                    imagesLink: List.generate(4, (int) => widget.product.image),
                     isAssets: false,
                   ),
                 ),
@@ -55,7 +54,7 @@ class ProductScreen extends StatelessWidget {
                         SizedBox(
                           width: 250,
                           child: Text(
-                            product.title,
+                            widget.product.title,
                             maxLines: 2,
 
                             style: TextStyle(
@@ -69,7 +68,7 @@ class ProductScreen extends StatelessWidget {
                         SizedBox(
                           width: 280,
                           child: Text(
-                            product.title,
+                            widget.product.title,
                             maxLines: 2,
                             style: TextStyle(
                               color: Colors.black54,
@@ -80,7 +79,7 @@ class ProductScreen extends StatelessWidget {
                       ],
                     ),
                     Text(
-                      "\$ ${product.price}",
+                      "\$ ${widget.product.price}",
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 25,
@@ -109,14 +108,13 @@ class ProductScreen extends StatelessWidget {
                 Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
-                    product.description,
+                    widget.product.description,
                     style: TextStyle(
                       color: Colors.black54,
                       fontWeight: FontWeight.w400,
                       fontSize: 16,
                     ),
                   ),
-                  
                 ),
                 SizedBox(height: 30),
                 Row(
@@ -130,18 +128,180 @@ class ProductScreen extends StatelessWidget {
                         borderRadius: BorderRadius.circular(30),
                       ),
                       child: Center(
-                        child: Icon(
-                          Icons.shopping_cart,
-                          color: Color(0xFFDB3022),
-                        ),
+                        child: Icon(Icons.favorite, color: Color(0xFFDB3022)),
                       ),
                     ),
-                    ProductDetailsPopoup(),
+
+                    InkWell(
+                      onTap: () {
+                        showModalBottomSheet(
+                          backgroundColor: Colors.transparent,
+                          context: context,
+                          builder:
+                              (context) => BottomSheet(product: widget.product),
+                        );
+                      },
+
+                      child: ContainerButtonModel(
+                        containerWidth: MediaQuery.of(context).size.width / 1.5,
+                        itext: "Buy Now",
+                        bgColor: Color(0xFFDB3022),
+                      ),
+                    ),
                   ],
                 ),
               ],
             ),
           ),
+        ),
+      ),
+    );
+  }
+}
+
+class BottomSheet extends StatefulWidget {
+  final Product product;
+  const BottomSheet({super.key, required this.product});
+
+  @override
+  State<BottomSheet> createState() => _BottomSheetState();
+}
+
+class _BottomSheetState extends State<BottomSheet> {
+  int total = 1;
+  List<Color> clrs = [
+    const Color.fromRGBO(0, 0, 0, 1),
+    Colors.yellow,
+    Colors.yellow,
+    Colors.red,
+  ];
+  var iStyle = TextStyle(fontSize: 14);
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: MediaQuery.of(context).size.height / 2.5,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(30),
+          topRight: Radius.circular(30),
+        ),
+      ),
+      child: Padding(
+        padding: EdgeInsets.all(30),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text("Size", style: iStyle),
+                    SizedBox(height: 20),
+                    Text("Color", style: iStyle),
+                    SizedBox(height: 20),
+                    Text("Total", style: iStyle),
+                    SizedBox(height: 20),
+                  ],
+                ),
+                SizedBox(width: 30),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        SizedBox(width: 10),
+                        Text("S", style: iStyle),
+                        SizedBox(width: 30),
+                        Text("M", style: iStyle),
+                        SizedBox(width: 30),
+                        Text("L", style: iStyle),
+                        SizedBox(width: 30),
+                        Text("XL", style: iStyle),
+                        SizedBox(width: 30),
+                      ],
+                    ),
+
+                    SizedBox(height: 18),
+                    Container(
+                      child: Row(
+                        children: [
+                          for (var i = 0; i < clrs.length; i++)
+                            Container(
+                              margin: EdgeInsets.symmetric(horizontal: 6),
+                              height: 28,
+                              width: 28,
+                              decoration: BoxDecoration(
+                                color: clrs[i],
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                            ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(height: 20),
+                    Row(
+                      children: [
+                        SizedBox(width: 10),
+                        GestureDetector(
+                          onTap: () {
+                            if (total <= 1) return;
+                            setState(() {
+                              total--;
+                            });
+                          },
+                          child: Text("-", style: iStyle),
+                        ),
+                        SizedBox(width: 30),
+                        Text("$total", style: iStyle),
+                        SizedBox(width: 30),
+                        GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              total++;
+                            });
+                          },
+                          child: Text("+", style: iStyle),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ],
+            ),
+            SizedBox(height: 30),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text("Total Payment", style: iStyle),
+                Text(
+                  "\$ ${widget.product.price! * total}",
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Color(0xFFDB3022),
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(height: 20),
+            InkWell(
+              onTap: () {
+                // Navigator.push(
+                //   context,
+                //   MaterialPageRoute(builder: (context) => CartScreen()),
+                // );
+              },
+              child: ContainerButtonModel(
+                containerWidth: MediaQuery.of(context).size.width,
+                itext: "Add To Cart",
+                bgColor: Color(0xFFDB3022),
+              ),
+            ),
+          ],
         ),
       ),
     );
