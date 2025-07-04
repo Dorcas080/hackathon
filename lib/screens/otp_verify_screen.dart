@@ -16,7 +16,7 @@ class _OTPVerifyScreenState extends State<OTPVeryfyScreen> {
     );
   }
 
-  TextEditingController textEditingController = new TextEditingController(
+  TextEditingController textEditingController = TextEditingController(
     text: "",
   );
 
@@ -73,7 +73,6 @@ class _OTPVerifyScreenState extends State<OTPVeryfyScreen> {
                     MaterialPageRoute(builder: (context) => RecoveryScreen()),
                   );
                 },
-                child: Text("Verify", style: TextStyle(fontSize: 18)),
                 style: ElevatedButton.styleFrom(
                   minimumSize: Size.fromHeight(55),
                   backgroundColor: Color(0xFFDB3022),
@@ -81,6 +80,7 @@ class _OTPVerifyScreenState extends State<OTPVeryfyScreen> {
                     borderRadius: BorderRadius.circular(8),
                   ),
                 ),
+                child: Text("Verify", style: TextStyle(fontSize: 18)),
               ),
             ],
           ),

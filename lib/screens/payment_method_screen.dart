@@ -10,7 +10,7 @@ class PaymentMethodScreen extends StatefulWidget {
 }
 
 class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
-  int _type = 1;
+  final int _type = 1;
   void _handleRadio(Object? e) => setState(() {});
 
   @override

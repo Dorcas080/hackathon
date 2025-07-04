@@ -11,6 +11,8 @@ class ProductDetailsPopoup extends StatelessWidget {
 
   List<Color> clrs = [Colors.red, Colors.green, Colors.indigo, Colors.amber];
 
+  ProductDetailsPopoup({super.key});
+
   @override
   Widget build(BuildContext context) {
     return InkWell(

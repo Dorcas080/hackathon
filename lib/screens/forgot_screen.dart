@@ -77,7 +77,6 @@ class _ForgotScreenState extends State<ForgotScreen> {
                     MaterialPageRoute(builder: (context) => RecoveryScreen()),
                   );
                 },
-                child: Text("Send Code", style: TextStyle(fontSize: 18)),
                 style: ElevatedButton.styleFrom(
                   minimumSize: Size.fromHeight(55),
                   backgroundColor: Color(0xFFDB3022),
@@ -85,6 +84,7 @@ class _ForgotScreenState extends State<ForgotScreen> {
                     borderRadius: BorderRadius.circular(8),
                   ),
                 ),
+                child: Text("Send Code", style: TextStyle(fontSize: 18)),
               ),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.center,

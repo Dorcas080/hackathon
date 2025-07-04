@@ -64,7 +64,6 @@ class _RecoveryScreenState extends State<RecoveryScreen> {
                   // builder: (context) => RecoveryScreen()),
                   // );
                 },
-                child: Text("Reset Password", style: TextStyle(fontSize: 18)),
                 style: ElevatedButton.styleFrom(
                   minimumSize: Size.fromHeight(55),
                   backgroundColor: Color(0xFFDB3022),
@@ -72,6 +71,7 @@ class _RecoveryScreenState extends State<RecoveryScreen> {
                     borderRadius: BorderRadius.circular(8),
                   ),
                 ),
+                child: Text("Reset Password", style: TextStyle(fontSize: 18)),
               ),
             ],
           ),

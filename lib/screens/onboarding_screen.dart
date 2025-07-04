@@ -5,6 +5,8 @@ import 'package:introduction_screen/introduction_screen.dart';
 class OnboardingScreen extends StatelessWidget {
   final introKey = GlobalKey<IntroductionScreenState>();
 
+  OnboardingScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     final pageDecoration = PageDecoration(
@@ -47,7 +49,6 @@ class OnboardingScreen extends StatelessWidget {
                   MaterialPageRoute(builder: (context) => HomeScreen()),
                 );
               },
-              child: Text("Let's Shop", style: TextStyle(fontSize: 18)),
               style: ElevatedButton.styleFrom(
                 minimumSize: Size.fromHeight(55),
                 backgroundColor: Color(0xFFDB3022),
@@ -55,6 +56,7 @@ class OnboardingScreen extends StatelessWidget {
                   borderRadius: BorderRadius.circular(8),
                 ),
               ),
+              child: Text("Let's Shop", style: TextStyle(fontSize: 18)),
             ),
           ),
         ),
