@@ -20,6 +20,8 @@ class CartScreen extends StatelessWidget {
 
   List prices = ["\$300", "\$600", "\$350", "\$60"];
 
+  CartScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

@@ -109,13 +109,14 @@ class ProductScreen extends StatelessWidget {
                 Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
-                    "${product.description}",
+                    product.description,
                     style: TextStyle(
                       color: Colors.black54,
                       fontWeight: FontWeight.w400,
                       fontSize: 16,
                     ),
                   ),
+                  
                 ),
                 SizedBox(height: 30),
                 Row(

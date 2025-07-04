@@ -46,7 +46,6 @@ class OTPScreen extends StatelessWidget {
                     MaterialPageRoute(builder: (context) => OTPVeryfyScreen()),
                   );
                 },
-                child: Text("Send Code", style: TextStyle(fontSize: 18)),
                 style: ElevatedButton.styleFrom(
                   minimumSize: Size.fromHeight(55),
                   backgroundColor: Color(0xFFDB3022),
@@ -54,6 +53,7 @@ class OTPScreen extends StatelessWidget {
                     borderRadius: BorderRadius.circular(8),
                   ),
                 ),
+                child: Text("Send Code", style: TextStyle(fontSize: 18)),
               ),
             ],
           ),

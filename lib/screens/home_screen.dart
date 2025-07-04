@@ -24,6 +24,8 @@ class HomeScreen extends StatelessWidget {
 
   List reviews = ["54", "120", "542", "34"];
 
+  HomeScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -131,7 +133,7 @@ class HomeScreen extends StatelessWidget {
                   ),
                 ),
                 SizedBox(height: 20),
-                Container(
+                SizedBox(
                   height: 180,
                   child: ListView.builder(
                     itemCount: imageList.length,
@@ -273,7 +275,7 @@ class HomeScreen extends StatelessWidget {
                       var products = snapshot.data;
                       print("this is the length ${products!.length}");
                       return GridView.builder(
-                        itemCount: products!.length,
+                        itemCount: products.length,
                         shrinkWrap: true,
                         physics: NeverScrollableScrollPhysics(),
                         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -282,7 +284,7 @@ class HomeScreen extends StatelessWidget {
                           // crossAxisSpacing: 40,
                         ),
                         itemBuilder: (context, index) {
-                          final product = products?[index];
+                          final product = products[index];
 
                           return ProductWidget(product: product);
                         },
@@ -308,7 +310,7 @@ class ProductWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       width: 200,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
@@ -333,7 +335,7 @@ class ProductWidget extends StatelessWidget {
                     borderRadius: BorderRadius.circular(10),
                     child:
                         product == null
-                            ? Card(child: Container(height: 220, width: 180))
+                            ? Card(child: SizedBox(height: 220, width: 180))
                             : Image.network(
                               product!.image ?? "",
                               width: 180,
@@ -372,7 +374,7 @@ class ProductWidget extends StatelessWidget {
           Row(
             children: [
               Icon(Icons.star, color: Colors.amber, size: 22),
-              Text('(' + "90" + ')'),
+              Text('(' "90" + ')'),
               SizedBox(width: 10),
               Text(
                 "\$ ${product?.price.toString() ?? ""}",
