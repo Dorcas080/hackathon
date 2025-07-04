@@ -1,31 +1,26 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:e_commerce_app/api/product_api.dart';
 import 'package:e_commerce_app/model/product.dart';
 import 'package:e_commerce_app/screens/product_screen.dart';
 import 'package:flutter/material.dart';
 
-class HomeScreen extends StatelessWidget {
-  List tabs = ["All", "Category", "Top", "Recommended"];
-
-  List imageList = [
-    "assets/images/image1.jpg",
-    "assets/images/image2.jpg",
-    "assets/images/image3.jpg",
-    "assets/images/image4.jpg",
-  ];
-
-  List productTitles = [
-    "Warm Zipper",
-    "Knitted Woo!",
-    "Zipper Win",
-    "child Win",
-  ];
-
-  List prices = ["\$300", "\$650", "\$50", "\$100"];
-
-  List reviews = ["54", "120", "542", "34"];
-
+class HomeScreen extends StatefulWidget {
   HomeScreen({super.key});
 
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  List<String> tabs = [
+    "tv",
+    "audio",
+    "laptop",
+    "mobile",
+    "gaming",
+    "appliances",
+  ];
+  String category = "mobile";
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -107,22 +102,33 @@ class HomeScreen extends StatelessWidget {
                     scrollDirection: Axis.horizontal,
                     itemCount: tabs.length,
                     itemBuilder: (context, index) {
-                      return FittedBox(
-                        child: Container(
-                          height: 40,
-                          margin: EdgeInsets.only(left: 15, right: 15),
-                          decoration: BoxDecoration(
-                            color: Colors.black12.withOpacity(0.05),
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          child: Center(
-                            child: FittedBox(
-                              child: Text(
-                                tabs[index],
-                                style: TextStyle(
-                                  color: Colors.black38,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 16,
+                      return GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            category = tabs[index];
+                          });
+                        },
+                        child: FittedBox(
+                          child: Container(
+                            height: 40,
+                            margin: EdgeInsets.only(left: 10, right: 10),
+                            padding: EdgeInsets.symmetric(horizontal: 20),
+                            decoration: BoxDecoration(
+                              color:
+                                  category == tabs[index]
+                                      ? Color(0xffdb3022)
+                                      : Colors.black12.withOpacity(0.05),
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: Center(
+                              child: FittedBox(
+                                child: Text(
+                                  tabs[index].toString().toUpperCase(),
+                                  style: TextStyle(
+                                    color: Colors.black38,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 16,
+                                  ),
                                 ),
                               ),
                             ),
@@ -133,114 +139,35 @@ class HomeScreen extends StatelessWidget {
                   ),
                 ),
                 SizedBox(height: 20),
-                SizedBox(
+                Container(
                   height: 180,
-                  child: ListView.builder(
-                    itemCount: imageList.length,
-                    scrollDirection: Axis.horizontal,
-                    shrinkWrap: true,
-                    itemBuilder: (context, index) {
-                      return Container(
-                        width: 320,
-
-                        margin: EdgeInsets.only(right: 15),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            SizedBox(
-                              height: 180,
-                              width: 180,
-                              child: Stack(
-                                children: [
-                                  InkWell(
-                                    onTap: () {
-                                      // Navigator.push(
-                                      //   context,
-                                      //   MaterialPageRoute(
-                                      //     builder: (context) => ProductScreen(),
-                                      //   ),
-                                      // );
-                                    },
-                                    child: ClipRRect(
-                                      borderRadius: BorderRadius.circular(10),
-                                      child: Image.asset(
-                                        imageList[index],
-                                        fit: BoxFit.cover,
-                                        height: 180,
-                                        width: 180,
-                                      ),
-                                    ),
-                                  ),
-                                  Positioned(
-                                    right: 10,
-                                    top: 10,
-                                    child: Container(
-                                      height: 30,
-                                      width: 30,
-                                      decoration: BoxDecoration(
-                                        color: Colors.white,
-                                        borderRadius: BorderRadius.circular(20),
-                                      ),
-                                      child: Center(
-                                        child: Icon(
-                                          Icons.favorite,
-                                          color: Color(0xFFDB3022),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(left: 8),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    productTitles[index],
-                                    style: TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  SizedBox(height: 10),
-                                  SizedBox(
-                                    width: 120,
-                                    child: Text(
-                                      "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,",
-                                      maxLines: 7,
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
-                                  ),
-                                  SizedBox(height: 10),
-
-                                  Row(
-                                    children: [
-                                      Icon(
-                                        Icons.star,
-                                        color: Colors.amber,
-                                        size: 22,
-                                      ),
-                                      Text('(' + reviews[index] + ')'),
-                                      SizedBox(width: 10),
-                                      Text(
-                                        prices[index],
-                                        style: TextStyle(
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.bold,
-                                          color: Color(0xFFDB3022),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      );
+                  child: FutureBuilder(
+                    future: ProductApi().getProductCategory(category),
+                    builder: (context, asyncSnapshot) {
+                      if (asyncSnapshot.connectionState ==
+                          ConnectionState.waiting) {
+                        return ListView.builder(
+                          itemCount: 2,
+                          scrollDirection: Axis.horizontal,
+                          shrinkWrap: true,
+                          itemBuilder: (context, index) {
+                            return ProductCard(product: null);
+                          },
+                        );
+                      } else if (asyncSnapshot.hasData) {
+                        var products = asyncSnapshot.data;
+                        return ListView.builder(
+                          itemCount: products?.length,
+                          scrollDirection: Axis.horizontal,
+                          shrinkWrap: true,
+                          itemBuilder: (context, index) {
+                            var product = products?[index];
+                            return ProductCard(product: product);
+                          },
+                        );
+                      } else {
+                        return Center(child: Container());
+                      }
                     },
                   ),
                 ),
@@ -259,7 +186,7 @@ class HomeScreen extends StatelessWidget {
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return GridView.builder(
-                        itemCount: productTitles.length,
+                        itemCount: 4,
                         shrinkWrap: true,
                         physics: NeverScrollableScrollPhysics(),
                         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -275,7 +202,7 @@ class HomeScreen extends StatelessWidget {
                       var products = snapshot.data;
                       print("this is the length ${products!.length}");
                       return GridView.builder(
-                        itemCount: products.length,
+                        itemCount: products!.length,
                         shrinkWrap: true,
                         physics: NeverScrollableScrollPhysics(),
                         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -284,7 +211,7 @@ class HomeScreen extends StatelessWidget {
                           // crossAxisSpacing: 40,
                         ),
                         itemBuilder: (context, index) {
-                          final product = products[index];
+                          final product = products?[index];
 
                           return ProductWidget(product: product);
                         },
@@ -303,6 +230,116 @@ class HomeScreen extends StatelessWidget {
   }
 }
 
+class ProductCard extends StatelessWidget {
+  const ProductCard({super.key, required this.product});
+
+  final Product? product;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 320,
+
+      margin: EdgeInsets.only(right: 15),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(
+            height: 180,
+            width: 180,
+            child: Stack(
+              children: [
+                InkWell(
+                  onTap: () {
+                    if (product == null) return;
+
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => ProductScreen(product: product!),
+                      ),
+                    );
+                  },
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(10),
+                    child: CachedNetworkImage(
+                      imageUrl: product?.image ?? "", // imageList[index],
+                      fit: BoxFit.cover,
+                      height: 180,
+                      width: 180,
+                    ),
+                  ),
+                ),
+                Positioned(
+                  right: 10,
+                  top: 10,
+                  child: Container(
+                    height: 30,
+                    width: 30,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: Center(
+                      child: Icon(Icons.favorite, color: Color(0xFFDB3022)),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(left: 8),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(
+                  width: 130,
+                  child: Text(
+                    product?.title ?? "",
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  ),
+                ),
+                SizedBox(height: 10),
+                SizedBox(
+                  width: 130,
+
+                  child: Text(
+                    product?.description ?? "",
+                    maxLines: 5,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+                SizedBox(height: 10),
+
+                Row(
+                  children: [
+                    Icon(Icons.star, color: Colors.amber, size: 22),
+                    Text('(' + "89" + ')'),
+                    SizedBox(width: 10),
+                    Text(
+                      "\$ ${product?.price ?? ""}",
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xFFDB3022),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
 class ProductWidget extends StatelessWidget {
   const ProductWidget({super.key, required this.product});
 
@@ -310,7 +347,7 @@ class ProductWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
+    return Container(
       width: 200,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
@@ -335,9 +372,9 @@ class ProductWidget extends StatelessWidget {
                     borderRadius: BorderRadius.circular(10),
                     child:
                         product == null
-                            ? Card(child: SizedBox(height: 220, width: 180))
-                            : Image.network(
-                              product!.image ?? "",
+                            ? Card(child: Container(height: 220, width: 180))
+                            : CachedNetworkImage(
+                              imageUrl: product!.image ?? "",
                               width: 180,
                               fit: BoxFit.cover,
                               height: 220,
@@ -374,7 +411,7 @@ class ProductWidget extends StatelessWidget {
           Row(
             children: [
               Icon(Icons.star, color: Colors.amber, size: 22),
-              Text('(' "90" + ')'),
+              Text('(' + "90" + ')'),
               SizedBox(width: 10),
               Text(
                 "\$ ${product?.price.toString() ?? ""}",

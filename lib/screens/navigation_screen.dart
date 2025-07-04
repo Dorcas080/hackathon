@@ -9,7 +9,6 @@ import 'package:flutter/material.dart';
 
 class NavigationScreen extends StatefulWidget {
   const NavigationScreen({super.key});
-
   @override
   State<NavigationScreen> createState() => _NavigationScreenState();
 }
@@ -36,8 +35,8 @@ class _NavigationScreenState extends State<NavigationScreen> {
       floatingActionButton: SafeArea(
         child: FloatingActionButton(
           onPressed: () {},
-          backgroundColor: Color(0xFFDB3022),
           child: Icon(Icons.qr_code, size: 20),
+          backgroundColor: Color(0xFFDB3022),
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
