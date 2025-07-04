@@ -56,7 +56,7 @@ class _SignupScreenState extends State<SignupScreen> {
         );
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (_) => LoginScreen()),
+          MaterialPageRoute(builder: (context) => NavigationScreen()),
         );
       } on FirebaseException catch (error) {
         ScaffoldMessenger.of(context).showSnackBar(
