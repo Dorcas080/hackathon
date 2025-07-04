@@ -20,7 +20,7 @@ class _HomeScreenState extends State<HomeScreen> {
     "gaming",
     "appliances",
   ];
-  String category = "mobile";
+  String category = "tv";
   @override
   Widget build(BuildContext context) {
     return Scaffold(
