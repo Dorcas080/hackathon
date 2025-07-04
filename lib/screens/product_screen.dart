@@ -1,4 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:e_commerce_app/screens/cart_screen.dart';
 import 'package:fan_carousel_image_slider/fan_carousel_image_slider.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:e_commerce_app/model/product.dart';
@@ -253,7 +256,10 @@ class _BottomSheetState extends State<BottomSheet> {
                               total--;
                             });
                           },
-                          child: Text("-", style: iStyle),
+                          child: Text(
+                            "-",
+                            style: iStyle.copyWith(fontSize: 24),
+                          ),
                         ),
                         SizedBox(width: 30),
                         Text("$total", style: iStyle),
@@ -289,11 +295,22 @@ class _BottomSheetState extends State<BottomSheet> {
             ),
             SizedBox(height: 20),
             InkWell(
-              onTap: () {
-                // Navigator.push(
-                //   context,
-                //   MaterialPageRoute(builder: (context) => CartScreen()),
-                // );
+              onTap: () async {
+                // var acartID = Uuid().v4();
+                await FirebaseFirestore.instance
+                    .collection("users")
+                    .doc(FirebaseAuth.instance.currentUser?.uid)
+                    .collection("carts")
+                    .doc(widget.product.id.toString())
+                    .set({
+                      "id": widget.product.id,
+                      "product": widget.product.toMap(),
+                      "total": total,
+                    });
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => CartScreen()),
+                );
               },
               child: ContainerButtonModel(
                 containerWidth: MediaQuery.of(context).size.width,
