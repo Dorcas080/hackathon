@@ -71,8 +71,8 @@ class _SignupScreenState extends State<SignupScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Material(
-      child: SingleChildScrollView(
+    return Scaffold(
+      body: SingleChildScrollView(
         child: SafeArea(
           child: Center(
             child: Form(
@@ -208,14 +208,7 @@ class _SignupScreenState extends State<SignupScreen> {
                             : SizedBox(
                               width: double.infinity,
                               child: ElevatedButton(
-                                onPressed: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => NavigationScreen(),
-                                    ),
-                                  );
-                                },
+                                onPressed: register,
                                 style: ElevatedButton.styleFrom(
                                   minimumSize: Size.fromHeight(55),
                                   backgroundColor: Color(0xFFDB3022),
