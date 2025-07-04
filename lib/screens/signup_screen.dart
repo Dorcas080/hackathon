@@ -40,7 +40,7 @@ class _SignupScreenState extends State<SignupScreen> {
             .collection("users")
             .doc(cred.user?.uid)
             .set({
-              "name": nameEditingController,
+              "name": nameEditingController.text,
               "email": emailEditingController.text,
               "number": int.tryParse(numberEditingController.text),
               "password": passwordEditingController.text,
@@ -53,6 +53,10 @@ class _SignupScreenState extends State<SignupScreen> {
             content: Text("Registered Successfully"),
             backgroundColor: Colors.green,
           ),
+        );
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => NavigationScreen()),
         );
       } on FirebaseException catch (error) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -149,7 +153,7 @@ class _SignupScreenState extends State<SignupScreen> {
                               return null;
                             }
                           },
-                          obscureText: true,
+                          obscureText: isObscure,
                           decoration: InputDecoration(
                             labelText: "Enter Password",
                             border: OutlineInputBorder(),
@@ -181,7 +185,7 @@ class _SignupScreenState extends State<SignupScreen> {
                               return null;
                             }
                           },
-                          obscureText: true,
+                          obscureText: disObscure,
                           decoration: InputDecoration(
                             labelText: "Confirm Password",
                             border: OutlineInputBorder(),
