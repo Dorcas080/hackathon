@@ -1,11 +1,18 @@
+// ignore_for_file: unused_element
+
+import 'dart:developer';
+
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
+
 import 'package:e_commerce_app/api/product_api.dart';
 import 'package:e_commerce_app/model/product.dart';
 import 'package:e_commerce_app/screens/product_screen.dart';
-import 'package:flutter/material.dart';
 
 class HomeScreen extends StatefulWidget {
-  HomeScreen({super.key});
+  const HomeScreen({super.key});
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -139,7 +146,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
                 SizedBox(height: 20),
-                Container(
+                SizedBox(
                   height: 180,
                   child: FutureBuilder(
                     future: ProductApi().getProductCategory(category),
@@ -202,7 +209,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       var products = snapshot.data;
                       print("this is the length ${products!.length}");
                       return GridView.builder(
-                        itemCount: products!.length,
+                        itemCount: products.length,
                         shrinkWrap: true,
                         physics: NeverScrollableScrollPhysics(),
                         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -211,7 +218,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           // crossAxisSpacing: 40,
                         ),
                         itemBuilder: (context, index) {
-                          final product = products?[index];
+                          final product = products[index];
 
                           return ProductWidget(product: product);
                         },
@@ -230,10 +237,35 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 }
 
-class ProductCard extends StatelessWidget {
-  const ProductCard({super.key, required this.product});
+class ProductCard extends StatefulWidget {
+  const ProductCard({super.key, this.product});
 
   final Product? product;
+
+  @override
+  State<ProductCard> createState() => _ProductCardState();
+}
+
+class _ProductCardState extends State<ProductCard> {
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  Future<void> _toggleFavorite(bool isLoved) async {
+    final uid = FirebaseAuth.instance.currentUser?.uid;
+    if (uid == null || widget.product == null) return;
+    final docRef = FirebaseFirestore.instance
+        .collection('users')
+        .doc(uid)
+        .collection('favorites')
+        .doc(widget.product!.id?.toString());
+    if (isLoved) {
+      await docRef.delete();
+    } else {
+      await docRef.set(Map<String, dynamic>.from(widget.product!.toMap()));
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -252,19 +284,22 @@ class ProductCard extends StatelessWidget {
               children: [
                 InkWell(
                   onTap: () {
-                    if (product == null) return;
+                    if (widget.product == null) return;
 
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => ProductScreen(product: product!),
+                        builder:
+                            (context) =>
+                                ProductScreen(product: widget.product!),
                       ),
                     );
                   },
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(10),
                     child: CachedNetworkImage(
-                      imageUrl: product?.image ?? "", // imageList[index],
+                      imageUrl:
+                          widget.product?.image ?? "", // imageList[index],
                       fit: BoxFit.cover,
                       height: 180,
                       width: 180,
@@ -282,7 +317,30 @@ class ProductCard extends StatelessWidget {
                       borderRadius: BorderRadius.circular(20),
                     ),
                     child: Center(
-                      child: Icon(Icons.favorite, color: Color(0xFFDB3022)),
+                      child: StreamBuilder(
+                        stream:
+                            FirebaseFirestore.instance
+                                .collection('users')
+                                .doc(FirebaseAuth.instance.currentUser?.uid)
+                                .collection('favorites')
+                                .doc(widget.product?.id?.toString())
+                                .snapshots(),
+                        builder: (context, snapshot) {
+                          log("${snapshot.data?.data().toString()}");
+
+                          return GestureDetector(
+                            onTap: () {
+                              _toggleFavorite((snapshot.data?.exists ?? false));
+                            },
+                            child: Icon(
+                              (snapshot.data?.exists ?? false)
+                                  ? Icons.favorite
+                                  : Icons.favorite_border,
+                              color: Color(0xFFDB3022),
+                            ),
+                          );
+                        },
+                      ),
                     ),
                   ),
                 ),
@@ -297,7 +355,7 @@ class ProductCard extends StatelessWidget {
                 SizedBox(
                   width: 130,
                   child: Text(
-                    product?.title ?? "",
+                    widget.product?.title ?? "",
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
 
@@ -309,7 +367,7 @@ class ProductCard extends StatelessWidget {
                   width: 130,
 
                   child: Text(
-                    product?.description ?? "",
+                    widget.product?.description ?? "",
                     maxLines: 5,
                     overflow: TextOverflow.ellipsis,
                   ),
@@ -319,10 +377,14 @@ class ProductCard extends StatelessWidget {
                 Row(
                   children: [
                     Icon(Icons.star, color: Colors.amber, size: 22),
-                    Text('(' + "89" + ')'),
+                    Text(
+                      '('
+                      "89"
+                      ')',
+                    ),
                     SizedBox(width: 10),
                     Text(
-                      "\$ ${product?.price ?? ""}",
+                      "\$ ${widget.product?.price ?? ""}",
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
@@ -340,14 +402,43 @@ class ProductCard extends StatelessWidget {
   }
 }
 
-class ProductWidget extends StatelessWidget {
-  const ProductWidget({super.key, required this.product});
+class ProductWidget extends StatefulWidget {
+  const ProductWidget({super.key, this.product});
 
   final Product? product;
 
   @override
+  State<ProductWidget> createState() => _ProductWidgetState();
+}
+
+class _ProductWidgetState extends State<ProductWidget> {
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  Future<void> _toggleFavorite(bool isLoved) async {
+    final uid = FirebaseAuth.instance.currentUser?.uid;
+    if (uid == null || widget.product == null) return;
+    final docRef = FirebaseFirestore.instance
+        .collection('users')
+        .doc(uid)
+        .collection('favorites')
+        .doc(widget.product!.id?.toString());
+    if (isLoved) {
+      await docRef.delete();
+    } else {
+      await docRef.set(
+        widget.product!.toMap().map((k, v) => MapEntry(k ?? '', v)),
+      );
+    }
+
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       width: 200,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
@@ -360,21 +451,23 @@ class ProductWidget extends StatelessWidget {
               children: [
                 InkWell(
                   onTap: () {
-                    if (product == null) return;
+                    if (widget.product == null) return;
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => ProductScreen(product: product!),
+                        builder:
+                            (context) =>
+                                ProductScreen(product: widget.product!),
                       ),
                     );
                   },
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(10),
                     child:
-                        product == null
-                            ? Card(child: Container(height: 220, width: 180))
+                        widget.product == null
+                            ? Card(child: SizedBox(height: 220, width: 180))
                             : CachedNetworkImage(
-                              imageUrl: product!.image ?? "",
+                              imageUrl: widget.product?.image ?? "",
                               width: 180,
                               fit: BoxFit.cover,
                               height: 220,
@@ -388,11 +481,33 @@ class ProductWidget extends StatelessWidget {
                     height: 30,
                     width: 30,
                     decoration: BoxDecoration(
-                      color: Colors.white,
                       borderRadius: BorderRadius.circular(20),
                     ),
                     child: Center(
-                      child: Icon(Icons.favorite, color: Color(0xFFDB3022)),
+                      child: StreamBuilder(
+                        stream:
+                            FirebaseFirestore.instance
+                                .collection('users')
+                                .doc(FirebaseAuth.instance.currentUser?.uid)
+                                .collection('favorites')
+                                .doc(widget.product?.id?.toString())
+                                .snapshots(),
+                        builder: (context, snapshot) {
+                          log("${snapshot.data?.data().toString()}");
+
+                          return GestureDetector(
+                            onTap: () {
+                              _toggleFavorite((snapshot.data?.exists ?? false));
+                            },
+                            child: Icon(
+                              (snapshot.data?.exists ?? false)
+                                  ? Icons.favorite
+                                  : Icons.favorite_border,
+                              color: Color(0xFFDB3022),
+                            ),
+                          );
+                        },
+                      ),
                     ),
                   ),
                 ),
@@ -401,7 +516,7 @@ class ProductWidget extends StatelessWidget {
           ),
           SizedBox(height: 10),
           Text(
-            product?.title ?? "",
+            widget.product?.title ?? "",
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
             style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
@@ -411,10 +526,14 @@ class ProductWidget extends StatelessWidget {
           Row(
             children: [
               Icon(Icons.star, color: Colors.amber, size: 22),
-              Text('(' + "90" + ')'),
+              Text(
+                '('
+                "90"
+                ')',
+              ),
               SizedBox(width: 10),
               Text(
-                "\$ ${product?.price.toString() ?? ""}",
+                "\$ ${widget.product?.price.toString() ?? ""}",
 
                 style: TextStyle(
                   fontSize: 18,

@@ -1,6 +1,15 @@
+import 'package:e_commerce_app/firebase_options.dart';
+import 'package:e_commerce_app/main.dart';
 import 'package:e_commerce_app/screens/shipping_address_screen.dart';
 import 'package:e_commerce_app/widgets/container_button_model.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  runApp(const MyApp());
+}
 
 class PaymentMethodScreen extends StatefulWidget {
   const PaymentMethodScreen({super.key});
