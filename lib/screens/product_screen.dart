@@ -18,7 +18,23 @@ class ProductScreen extends StatefulWidget {
 }
 
 class _ProductScreenState extends State<ProductScreen> {
-  // List<String> images = [
+  Future<void> _toggleFavorite(bool isLoved) async {
+    final uid = FirebaseAuth.instance.currentUser?.uid;
+    if (uid == null) return;
+    final docRef = FirebaseFirestore.instance
+        .collection('users')
+        .doc(uid)
+        .collection('favorites')
+        .doc(widget.product!.id?.toString());
+    if (isLoved) {
+      await docRef.delete();
+    } else {
+      await docRef.set(
+        widget.product!.toMap().map((k, v) => MapEntry(k ?? '', v)),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -124,15 +140,33 @@ class _ProductScreenState extends State<ProductScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    Container(
-                      height: 60,
-                      width: 60,
-                      decoration: BoxDecoration(
-                        color: Color(0x1F989797),
-                        borderRadius: BorderRadius.circular(30),
-                      ),
+                    CircleAvatar(
+                      radius: 28,
                       child: Center(
-                        child: Icon(Icons.favorite, color: Color(0xFFDB3022)),
+                        child: StreamBuilder(
+                          stream:
+                              FirebaseFirestore.instance
+                                  .collection('users')
+                                  .doc(FirebaseAuth.instance.currentUser?.uid)
+                                  .collection('favorites')
+                                  .doc(widget.product.id?.toString())
+                                  .snapshots(),
+                          builder: (context, snapshot) {
+                            return GestureDetector(
+                              onTap: () {
+                                _toggleFavorite(
+                                  (snapshot.data?.exists ?? false),
+                                );
+                              },
+                              child: Icon(
+                                (snapshot.data?.exists ?? false)
+                                    ? Icons.favorite
+                                    : Icons.favorite_border,
+                                color: Color(0xFFDB3022),
+                              ),
+                            );
+                          },
+                        ),
                       ),
                     ),
 
@@ -145,7 +179,6 @@ class _ProductScreenState extends State<ProductScreen> {
                               (context) => BottomSheet(product: widget.product),
                         );
                       },
-
                       child: ContainerButtonModel(
                         containerWidth: MediaQuery.of(context).size.width / 1.5,
                         itext: "Buy Now",
