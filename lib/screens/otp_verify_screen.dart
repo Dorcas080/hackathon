@@ -9,7 +9,7 @@ class OTPVeryfyScreen extends StatefulWidget {
 }
 
 class _OTPVerifyScreenState extends State<OTPVeryfyScreen> {
-  BoxDecoration get _pinPutDecoration {
+  BoxDecoration get PutDecoration {
     return BoxDecoration(
       border: Border.all(color: Theme.of(context).primaryColor),
       borderRadius: BorderRadius.circular(10.0),
