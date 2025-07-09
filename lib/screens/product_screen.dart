@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:e_commerce_app/screens/cart_screen.dart';
 import 'package:fan_carousel_image_slider/fan_carousel_image_slider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:e_commerce_app/model/product.dart';
@@ -201,9 +202,6 @@ class _BottomSheetState extends State<BottomSheet> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text("Size", style: iStyle),
-                    SizedBox(height: 20),
-                    Text("Color", style: iStyle),
                     SizedBox(height: 20),
                     Text("Total", style: iStyle),
                     SizedBox(height: 20),
@@ -214,38 +212,7 @@ class _BottomSheetState extends State<BottomSheet> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Row(
-                      children: [
-                        SizedBox(width: 10),
-                        Text("S", style: iStyle),
-                        SizedBox(width: 30),
-                        Text("M", style: iStyle),
-                        SizedBox(width: 30),
-                        Text("L", style: iStyle),
-                        SizedBox(width: 30),
-                        Text("XL", style: iStyle),
-                        SizedBox(width: 30),
-                      ],
-                    ),
-
                     SizedBox(height: 18),
-                    Container(
-                      child: Row(
-                        children: [
-                          for (var i = 0; i < clrs.length; i++)
-                            Container(
-                              margin: EdgeInsets.symmetric(horizontal: 6),
-                              height: 28,
-                              width: 28,
-                              decoration: BoxDecoration(
-                                color: clrs[i],
-                                borderRadius: BorderRadius.circular(20),
-                              ),
-                            ),
-                        ],
-                      ),
-                    ),
-                    SizedBox(height: 20),
                     Row(
                       children: [
                         SizedBox(width: 10),
@@ -256,9 +223,9 @@ class _BottomSheetState extends State<BottomSheet> {
                               total--;
                             });
                           },
-                          child: Text(
-                            "-",
-                            style: iStyle.copyWith(fontSize: 24),
+                          child: Icon(
+                            CupertinoIcons.minus,
+                            color: Colors.green,
                           ),
                         ),
                         SizedBox(width: 30),
@@ -270,7 +237,7 @@ class _BottomSheetState extends State<BottomSheet> {
                               total++;
                             });
                           },
-                          child: Text("+", style: iStyle),
+                          child: Icon(CupertinoIcons.add, color: Colors.green),
                         ),
                       ],
                     ),
@@ -305,7 +272,8 @@ class _BottomSheetState extends State<BottomSheet> {
                     .set({
                       "id": widget.product.id,
                       "product": widget.product.toMap(),
-                      "total": total,
+                      "count": total,
+                      "totalAmount": widget.product.price! * total,
                     });
                 Navigator.push(
                   context,
