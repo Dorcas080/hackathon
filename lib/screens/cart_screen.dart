@@ -20,6 +20,17 @@ class CartScreen extends StatelessWidget {
     return sum;
   }
 
+  Future<void> removeFavorite(String productId) async {
+    final uid = FirebaseAuth.instance.currentUser?.uid;
+    if (uid == null) return;
+    await FirebaseFirestore.instance
+        .collection('users')
+        .doc(uid)
+        .collection('carts')
+        .doc(productId)
+        .delete();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -62,12 +73,6 @@ class CartScreen extends StatelessWidget {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Checkbox(
-                                  splashRadius: 20,
-                                  activeColor: Color(0xFFDB3022),
-                                  value: true,
-                                  onChanged: (val) {},
-                                ),
                                 ClipRRect(
                                   borderRadius: BorderRadius.circular(10),
                                   child: Image.network(
@@ -117,24 +122,38 @@ class CartScreen extends StatelessWidget {
                                     ),
                                   ],
                                 ),
-                                Row(
+                                Column(
                                   children: [
-                                    Icon(
-                                      CupertinoIcons.minus,
-                                      color: Colors.green,
-                                    ),
-                                    SizedBox(width: 20),
-                                    Text(
-                                      "${cart['count'] ?? 0}",
-                                      style: TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w700,
+                                    IconButton(
+                                      icon: const Icon(
+                                        Icons.delete,
+                                        color: Colors.red,
                                       ),
+                                      onPressed:
+                                          () => removeFavorite(
+                                            cart['id']?.toString() ?? '',
+                                          ),
                                     ),
-                                    SizedBox(width: 5),
-                                    Icon(
-                                      CupertinoIcons.plus,
-                                      color: Color(0xFFDB3022),
+                                    Row(
+                                      children: [
+                                        Icon(
+                                          CupertinoIcons.minus,
+                                          color: Colors.green,
+                                        ),
+                                        SizedBox(width: 20),
+                                        Text(
+                                          "${cart['count'] ?? 0}",
+                                          style: TextStyle(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w700,
+                                          ),
+                                        ),
+                                        SizedBox(width: 5),
+                                        Icon(
+                                          CupertinoIcons.plus,
+                                          color: Color(0xFFDB3022),
+                                        ),
+                                      ],
                                     ),
                                   ],
                                 ),
@@ -150,21 +169,6 @@ class CartScreen extends StatelessWidget {
                 ),
               ),
               SizedBox(height: 30),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    "Select All",
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
-                  ),
-                  Checkbox(
-                    splashRadius: 20,
-                    activeColor: Color(0xFFDB3022),
-                    value: false,
-                    onChanged: (val) {},
-                  ),
-                ],
-              ),
               Divider(height: 20, thickness: 1, color: Colors.black),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
