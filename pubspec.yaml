@@ -47,6 +47,8 @@ dependencies:
   cached_network_image: ^3.4.1
   uuid: ^4.5.1
   get: ^4.7.2
+  flutter_credit_card: ^4.1.0
+  u_credit_card: ^1.4.0
 
 dev_dependencies:
   flutter_test:
