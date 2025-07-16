@@ -25,12 +25,12 @@ class _ProductScreenState extends State<ProductScreen> {
         .collection('users')
         .doc(uid)
         .collection('favorites')
-        .doc(widget.product!.id?.toString());
+        .doc(widget.product.id?.toString());
     if (isLoved) {
       await docRef.delete();
     } else {
       await docRef.set(
-        widget.product!.toMap().map((k, v) => MapEntry(k ?? '', v)),
+        widget.product.toMap().map((k, v) => MapEntry(k ?? '', v)),
       );
     }
   }
@@ -318,8 +318,7 @@ class _BottomSheetState extends State<BottomSheet> {
                 itext: "Add To Cart",
                 bgColor: Color(0xFFDB3022),
               ),
-            ),
-          ],
+            ),       ],
         ),
       ),
     );

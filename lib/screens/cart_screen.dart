@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:e_commerce_app/screens/payment_method_screen.dart';
+import 'package:e_commerce_app/screens/shipping_address_screen.dart';
 import 'package:e_commerce_app/widgets/container_button_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -7,7 +8,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class CartScreen extends StatelessWidget {
-  CartScreen({super.key});
+  const CartScreen({super.key});
 
   int convertToTotal(List prices) {
     int sum = 0;
@@ -210,7 +211,7 @@ class CartScreen extends StatelessWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => PaymentMethodScreen(),
+                      builder: (context) => ShippingAddressScreen(),
                     ),
                   );
                 },
