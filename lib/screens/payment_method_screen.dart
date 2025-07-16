@@ -1,85 +1,103 @@
-import 'package:e_commerce_app/screens/shipping_address_screen.dart';
+import 'package:e_commerce_app/screens/order_confirm_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_credit_card/flutter_credit_card.dart';
 
 class PaymentScreen extends StatefulWidget {
-  const PaymentScreen({super.key});
+  final String fullName;
+  final String fullAddress;
+
+  const PaymentScreen({
+    super.key,
+    required this.fullName,
+    required this.fullAddress,
+  });
 
   @override
-  _PaymentScreenState createState() => _PaymentScreenState();
+  State<PaymentScreen> createState() => _PaymentScreenState();
 }
 
 class _PaymentScreenState extends State<PaymentScreen> {
+  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+
   String cardNumber = '';
   String expiryDate = '';
   String cardHolderName = '';
   String cvvCode = '';
   bool isCvvFocused = false;
-
-  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
-
-  void _onValidate() {
-    if (formKey.currentState!.validate()) {
-      print('Card Number: $cardNumber');
-      print('Expiry Date: $expiryDate');
-      print('Card Holder: $cardHolderName');
-      print('CVV: $cvvCode');
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Payment Info Submitted Successfully')),
-      );
-    } else {
-      print('Invalid info');
-    }
-  }
+  bool isLoading = false;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Payment')),
+      appBar: AppBar(
+        title: const Text('Payment'),
+        centerTitle: true,
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        foregroundColor: Colors.black,
+      ),
       body: SafeArea(
         child: Column(
           children: [
-            CreditCardWidget(
-              cardNumber: cardNumber,
-              expiryDate: expiryDate,
-              cardHolderName: cardHolderName,
-              cvvCode: cvvCode,
-              showBackView: isCvvFocused,
-              cardBgColor: Colors.blueAccent,
-              isSwipeGestureEnabled: true,
-              obscureCardNumber: true,
-              obscureCardCvv: true, onCreditCardWidgetChange: (CreditCardBrand ) {},
-            ),
-            Expanded(
-              child: SingleChildScrollView(
-                child: CreditCardForm(
-                  formKey: formKey,
-                  obscureCvv: true,
-                  obscureNumber: true,
-                  cardNumber: cardNumber,
-                  cvvCode: cvvCode,
-                  isHolderNameVisible: true,
-                  isCardNumberVisible: true,
-                  isExpiryDateVisible: true,
-                  cardHolderName: cardHolderName,
-                  expiryDate: expiryDate,
-                 
-                  onCreditCardModelChange: _onModelChange,
-                ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: ElevatedButton(
-                onPressed: _onValidate,
-                child: Text('Submit Payment'),
-
-              ),
-            ),
-            
+            _buildCreditCardWidget(),
+            Expanded(child: _buildCreditCardForm()),
+            _buildSubmitButton(context),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildCreditCardWidget() {
+    return CreditCardWidget(
+      cardNumber: cardNumber,
+      expiryDate: expiryDate,
+      cardHolderName: cardHolderName,
+      cvvCode: cvvCode,
+      showBackView: isCvvFocused,
+      cardBgColor: Colors.blueAccent,
+      isSwipeGestureEnabled: true,
+      obscureCardNumber: true,
+      obscureCardCvv: true,
+      onCreditCardWidgetChange: (_) {},
+    );
+  }
+
+  Widget _buildCreditCardForm() {
+    return SingleChildScrollView(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: CreditCardForm(
+        formKey: formKey,
+        obscureCvv: true,
+        obscureNumber: true,
+        isHolderNameVisible: true,
+        isCardNumberVisible: true,
+        isExpiryDateVisible: true,
+        cardNumber: cardNumber,
+        cvvCode: cvvCode,
+        cardHolderName: cardHolderName,
+        expiryDate: expiryDate,
+        onCreditCardModelChange: _onModelChange,
+      ),
+    );
+  }
+
+  Widget _buildSubmitButton(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Colors.blueAccent,
+          padding: const EdgeInsets.symmetric(vertical: 16),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(30),
+          ),
+        ),
+        onPressed: isLoading ? null : _onValidate,
+        child:
+            isLoading
+                ? const CircularProgressIndicator(color: Colors.white)
+                : const Text('Submit Payment'),
       ),
     );
   }
@@ -94,11 +112,33 @@ class _PaymentScreenState extends State<PaymentScreen> {
     });
   }
 
-  InputDecoration _inputDecoration(String label) {
-    return InputDecoration(
-      labelText: label,
-      hintText: label,
-      border: OutlineInputBorder(),
-    );
+  void _onValidate() async {
+    if (formKey.currentState?.validate() ?? false) {
+      setState(() => isLoading = true);
+
+      await Future.delayed(const Duration(seconds: 1)); // Simulate payment
+
+      setState(() => isLoading = false);
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Payment Info Submitted Successfully')),
+      );
+
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder:
+              (_) => OrderConfirmScreen(
+                fullName: widget.fullName,
+                fullAddress: widget.fullAddress,
+                cardNumber: cardNumber,
+              ),
+        ),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please complete the form properly')),
+      );
+    }
   }
 }
